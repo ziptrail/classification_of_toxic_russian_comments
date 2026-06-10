@@ -9,7 +9,10 @@
 ## Требования
 
 - Python 3.10 или выше
-- TensorFlow 2.18 (для совместимости с сохранёнными моделями)
+- TensorFlow 2.21.0 (для совместимости с сохранёнными моделями)
+- Flask 3.1.0
+- H5py 3.12.1 (для совместимости с сохранёнными моделями)
+- Numpy 2.1.3
 
 
 ## Установка и запуск
@@ -30,6 +33,8 @@ pip install flask==3.1.0 tensorflow==2.21.0 h5py==3.12.1 numpy==2.1.3
 - **LSTM:** (https://cloud.mail.ru/public/1zRQ/MBEBt8T6b)  
 - **GRU:** (https://cloud.mail.ru/public/9zWo/xHh6mfn5G)  
 - **Conv1D:** (https://cloud.mail.ru/public/V95x/Bssk7myMp)
+
+Затем создайте папку "model" в корне своего проекта и переместите туда скачанные модели
 
 ### 4. Запустите приложение
 ```bash
