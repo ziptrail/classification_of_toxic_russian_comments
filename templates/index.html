@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Классификация токсичности 💬</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="main-container">
+    <!-- Левая часть: ввод и кнопка -->
+    <div class="left-section">
+        <h1>💬 Классификация токсичности</h1>
+        <p class="subtitle">Введите текст, выберите модель и получите оценку</p>
+
+        <!-- Выбор модели -->
+        <div class="model-select">
+            <label for="modelSelect">Архитектура:</label>
+            <select id="modelSelect">
+                <option value="lstm">LSTM</option>
+                <option value="gru">GRU</option>
+                <option value="conv1d">Conv1D</option>
+            </select>
+        </div>
+
+        <!-- Поле ввода текста -->
+        <textarea id="textInput" placeholder="Введите комментарий..." rows="5" cols="40"></textarea>
+
+        <!-- Кнопка распознавания -->
+        <button id="predictBtn" disabled>🔍 Распознать</button>
+
+        <!-- Индикатор загрузки -->
+        <div class="loader" id="loader" style="display:none;"></div>
+    </div>
+
+    <!-- Правая часть: результат, история, статистика -->
+    <div class="right-section">
+        <!-- Блок результата -->
+        <div id="resultBox" class="result-box" style="display:none;">
+            <h2 id="prediction"></h2>
+            <div id="details"></div>
+        </div>
+
+        <!-- Блок истории -->
+        <div id="historyBox" class="history-box" style="display:none;">
+            <h3>📝 История запросов</h3>
+            <div id="historyList" class="history-list"></div>
+            <button id="clearHistoryBtn" class="clear-btn">Очистить историю</button>
+        </div>
+
+        <!-- Блок статистики -->
+        <div id="statsBox" class="stats-box" style="display:none;">
+            <h3>📊 Статистика сессии</h3>
+            <div id="statsList"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+const textInput = document.getElementById('textInput');
+const modelSelect = document.getElementById('modelSelect');
+const predictBtn = document.getElementById('predictBtn');
+const loader = document.getElementById('loader');
+const resultBox = document.getElementById('resultBox');
+const predictionText = document.getElementById('prediction');
+const detailsDiv = document.getElementById('details');
+
+const historyBox = document.getElementById('historyBox');
+const historyList = document.getElementById('historyList');
+const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+const statsBox = document.getElementById('statsBox');
+const statsList = document.getElementById('statsList');
+
+let stats = {};
+const MAX_HISTORY = 10;
+
+// Активируем кнопку, если есть текст
+textInput.addEventListener('input', () => {
+    predictBtn.disabled = textInput.value.trim().length === 0;
+});
+
+function addToHistory(text, prediction, confidence, details) {
+    const item = document.createElement('div');
+    item.classList.add('history-item');
+    const timestamp = new Date().toLocaleTimeString();
+
+    const shortText = text.length > 40 ? text.substring(0, 40) + '...' : text;
+
+    item.innerHTML = `
+        <div class="history-content">
+            <p class="history-text">💬 "${shortText}"</p>
+            <p>🧠 ${prediction} (${confidence}%)</p>
+            <small>${timestamp}</small>
+        </div>
+    `;
+
+    historyList.prepend(item);
+
+    while(historyList.children.length > MAX_HISTORY) {
+        historyList.removeChild(historyList.lastChild);
+    }
+
+    historyBox.style.display = 'block';
+}
+
+clearHistoryBtn.onclick = () => {
+    historyList.innerHTML = "";
+    historyBox.style.display = 'none';
+};
+
+function updateStats(prediction) {
+    stats[prediction] = (stats[prediction] || 0) + 1;
+    statsList.innerHTML = "";
+    for (const [key, value] of Object.entries(stats)) {
+        statsList.innerHTML += `<p>${key}: ${value}</p>`;
+    }
+    statsBox.style.display = 'block';
+}
+
+function showDetails(details) {
+    let html = '<table class="details-table"><tr><th>Категория</th><th>Процент</th></tr>';
+    for (const [label, prob] of Object.entries(details)) {
+        html += `<tr><td>${label}</td><td>${prob.toFixed(1)}%</td></tr>`;
+    }
+    html += '</table>';
+    detailsDiv.innerHTML = html;
+}
+
+predictBtn.addEventListener('click', () => {
+    const text = textInput.value.trim();
+    const model = modelSelect.value;
+
+    if (!text) return alert("Введите текст!");
+
+    loader.style.display = "block";
+    predictBtn.disabled = true;
+    resultBox.style.display = "none";
+
+    fetch('/predict_ajax', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text, model: model })
+    })
+    .then(r => r.json())
+    .then(data => {
+        loader.style.display = "none";
+        resultBox.style.display = "block";
+
+        if (data.error) {
+            predictionText.textContent = "Ошибка: " + data.error;
+            detailsDiv.innerHTML = "";
+        } else {
+            predictionText.textContent = `🧠 Основной класс: ${data.prediction} (${data.confidence}%)`;
+            showDetails(data.details);
+
+            addToHistory(text, data.prediction, data.confidence, data.details);
+            updateStats(data.prediction);
+        }
+    })
+    .catch(err => {
+        loader.style.display = "none";
+        alert("Ошибка при обработке запроса");
+        console.error(err);
+    })
+    .finally(() => {
+        predictBtn.disabled = false;
+    });
+});
+</script>
+
+</body>
+</html>

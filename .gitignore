@@ -1,0 +1,10 @@
+venv/
+env/
+.venv/
+
+__pycache__/
+*.pyc
+
+model/*.h5
+model/*.kerasyes
+yes.pub

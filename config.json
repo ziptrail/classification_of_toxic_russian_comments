@@ -1,0 +1,10 @@
+{
+  "max_words": 100000,
+  "max_len": 150,
+  "label_cols": [
+    "normal",
+    "insult",
+    "threat",
+    "obscenity"
+  ]
+}
