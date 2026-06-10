@@ -27,9 +27,9 @@ pip install flask==3.1.0 tensorflow==2.21.0 h5py==3.12.1 numpy==2.1.3
 
 ### 3. Скачайте модели
 
-LSTM: https://cloud.mail.ru/public/1zRQ/MBEBt8T6b
-GRU: https://cloud.mail.ru/public/9zWo/xHh6mfn5G
-Conv1D: https://cloud.mail.ru/public/V95x/Bssk7myMp
+- **LSTM:** (https://cloud.mail.ru/public/1zRQ/MBEBt8T6b)  
+- **GRU:** (https://cloud.mail.ru/public/9zWo/xHh6mfn5G)  
+- **Conv1D:** (https://cloud.mail.ru/public/V95x/Bssk7myMp)
 
 ### 4. Запустите приложение
 ```bash
@@ -40,5 +40,5 @@ python app.py
 
 Контакты
 
-Автор: Александр Кочелаев
+Автор: Александр Кочелаев 
 E-mail: sanya.kochelaev@mail.ru
