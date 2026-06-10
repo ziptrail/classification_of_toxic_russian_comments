@@ -8,7 +8,6 @@
 <body>
 
 <div class="main-container">
-    <!-- Левая часть: ввод и кнопка -->
     <div class="left-section">
         <h1>💬 Классификация токсичности</h1>
         <p class="subtitle">Введите текст, выберите модель и получите оценку</p>
@@ -23,32 +22,25 @@
             </select>
         </div>
 
-        <!-- Поле ввода текста -->
         <textarea id="textInput" placeholder="Введите комментарий..." rows="5" cols="40"></textarea>
 
-        <!-- Кнопка распознавания -->
         <button id="predictBtn" disabled>🔍 Распознать</button>
 
-        <!-- Индикатор загрузки -->
         <div class="loader" id="loader" style="display:none;"></div>
     </div>
 
-    <!-- Правая часть: результат, история, статистика -->
     <div class="right-section">
-        <!-- Блок результата -->
         <div id="resultBox" class="result-box" style="display:none;">
             <h2 id="prediction"></h2>
             <div id="details"></div>
         </div>
 
-        <!-- Блок истории -->
         <div id="historyBox" class="history-box" style="display:none;">
             <h3>📝 История запросов</h3>
             <div id="historyList" class="history-list"></div>
             <button id="clearHistoryBtn" class="clear-btn">Очистить историю</button>
         </div>
 
-        <!-- Блок статистики -->
         <div id="statsBox" class="stats-box" style="display:none;">
             <h3>📊 Статистика сессии</h3>
             <div id="statsList"></div>
@@ -75,7 +67,6 @@ const statsList = document.getElementById('statsList');
 let stats = {};
 const MAX_HISTORY = 10;
 
-// Активируем кнопку, если есть текст
 textInput.addEventListener('input', () => {
     predictBtn.disabled = textInput.value.trim().length === 0;
 });
