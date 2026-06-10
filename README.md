@@ -40,5 +40,5 @@ python app.py
 
 Контакты
 
-Автор: Александр Кочелаев 
-E-mail: sanya.kochelaev@mail.ru
+- Автор: Александр Кочелаев
+- E-mail: sanya.kochelaev@mail.ru
